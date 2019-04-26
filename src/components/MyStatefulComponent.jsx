@@ -27,7 +27,13 @@ class MyStatefulComponent extends Component {
     goBack () {
         console.log("goBack");
         if (this.state.previous) {
-            this.setState(this.state.prevState);
+            let prev = this.state.previous;
+            this.setState((state, props)=> {
+                return {
+                    text: prev.text,
+                    previous: prev.previous
+                };
+            });
         }
     }
 
