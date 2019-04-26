@@ -5,18 +5,40 @@ class MyStatefulComponent extends Component {
     constructor() {
         super();
         this.state = {
-            text : ""
+            text : "",
+            previous : null,
         }
         this.handleTextChange = this.handleTextChange.bind(this);
+        this.commit = this.commit.bind(this);
+        this.goBack = this.goBack.bind(this);
     }
-    history = [];
-    stateBuilder () {
 
+    commit () {
+        console.log("commit");
+        console.log(this.state);
+        this.setState((state, props)=>{
+            return {
+                text: state.text,
+                previous: this.state,
+            }
+        });
+    }
+
+    goBack () {
+        console.log("goBack");
+        if (this.state.previous) {
+            this.setState(this.state.prevState);
+        }
     }
 
     handleTextChange (event) {
-        console.log(event.target.value);
-        this.setState({text: event.target.value});
+        event.persist();
+        this.setState((state, props)=>{
+            return {
+                text: event.target.value,
+                previous: state.previous
+            }
+        });
     }
 
     render() {
@@ -31,7 +53,16 @@ class MyStatefulComponent extends Component {
                     </textarea>
                 </p>
                 <p>
-                    <input type="button" value="commit"/>
+                    <input 
+                        type="button" 
+                        value="commit" 
+                        onClick = {this.commit}
+                    />
+                    <input 
+                        type="button" 
+                        value="back" 
+                        onClick = {this.goBack}
+                    />
                 </p>
             </div>
         );
