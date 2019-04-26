@@ -58,7 +58,8 @@ class MyStatefulComponent extends Component {
         this.setState((state, props)=>{
             return {
                 text: event.target.value,
-                previous: state.previous
+                previous: state.previous,
+                next: null
             }
         });
     }
