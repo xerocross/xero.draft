@@ -11,6 +11,7 @@ class MyStatefulComponent extends Component {
         this.handleTextChange = this.handleTextChange.bind(this);
         this.commit = this.commit.bind(this);
         this.goBack = this.goBack.bind(this);
+        this.goForward = this.goForward.bind(this);
     }
 
     commit () {
@@ -31,7 +32,22 @@ class MyStatefulComponent extends Component {
             this.setState((state, props)=> {
                 return {
                     text: prev.text,
-                    previous: prev.previous
+                    previous: prev.previous,
+                    next: state
+                };
+            });
+        }
+    }
+
+    goForward () {
+        console.log("goForward");
+        if (this.state.next) {
+            let next = this.state.next;
+            this.setState((state, props)=> {
+                return {
+                    text: next.text,
+                    previous: state,
+                    next: next.next
                 };
             });
         }
@@ -68,6 +84,11 @@ class MyStatefulComponent extends Component {
                         type="button" 
                         value="back" 
                         onClick = {this.goBack}
+                    />
+                    <input 
+                        type="button" 
+                        value="forward" 
+                        onClick = {this.goForward}
                     />
                 </p>
             </div>
