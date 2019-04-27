@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import MyStatefulComponent from "./components/MyStatefulComponent";
+import TextCommitWidget from "./components/TextCommitWidget";
 
 function App() {
   return (
     <div className="App">
-      <MyStatefulComponent />
+      <TextCommitWidget />
     </div>
   );
 }

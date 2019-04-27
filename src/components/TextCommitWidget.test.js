@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MyStatefulComponent from './MyStatefulComponent.jsx';
+import TextCommitWidget from './TextCommitWidget.jsx';
 import { render, fireEvent, cleanup } from 'react-testing-library';
 
 afterEach(cleanup)
@@ -13,7 +13,7 @@ let forwardButton;
 
 
 beforeEach(()=>{
-    const {  getByText, container } = render(<MyStatefulComponent />);
+    const {  getByText, container } = render(<TextCommitWidget />);
     textarea = container.querySelector("textarea");
     commitButton = getByText("commit");
     backButton = getByText("back");
@@ -24,7 +24,7 @@ beforeEach(()=>{
 
 test('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<MyStatefulComponent />, div);
+  ReactDOM.render(<TextCommitWidget />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
 
