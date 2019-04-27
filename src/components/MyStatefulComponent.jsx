@@ -19,9 +19,7 @@ class MyStatefulComponent extends Component {
     }
 
     commit () {
-        console.log("commit");
         if (this.state.dirty === false) {
-            console.log("not recording duplicate commit");
             return;
         } else {
             this.setState((state, props)=>{
@@ -76,7 +74,6 @@ class MyStatefulComponent extends Component {
     }
 
     goBack () {
-        console.log("goBack");
         if (this.state.dirty) {
             alert("To go back, first you must commit current changes or else reset to the most recent commit.");
             return;
@@ -96,7 +93,6 @@ class MyStatefulComponent extends Component {
     }
 
     goForward () {
-        console.log("goForward");
         if (this.state.next) {
             let next = this.state.next;
             this.setState((state, props)=> {
