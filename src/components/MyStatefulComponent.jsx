@@ -7,33 +7,83 @@ class MyStatefulComponent extends Component {
         this.state = {
             text : "",
             previous : null,
+            next: null,
+            dirty : false
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.commit = this.commit.bind(this);
         this.goBack = this.goBack.bind(this);
         this.goForward = this.goForward.bind(this);
+        this.reset = this.reset.bind(this);
     }
 
     commit () {
         console.log("commit");
-        console.log(this.state);
-        this.setState((state, props)=>{
-            return {
-                text: state.text,
-                previous: this.state,
-            }
-        });
+        if (this.state.dirty === false) {
+            console.log("not recording duplicate commit");
+            return;
+        } else {
+            this.setState((state, props)=>{
+                return {
+                    text: state.text,
+                    previous: state.previous,
+                    next: null,
+                    dirty : false
+                }
+            });
+        }
+    }
+
+    handleTextChange (event) {
+        event.persist();
+        if (this.state.dirty) {
+            this.setState((state, props)=>{
+                return {
+                    text: event.target.value,
+                    previous: state.previous,
+                    next: null,
+                    dirty : true
+                }
+            });
+        } else {
+            this.setState((state, props)=>{
+                return {
+                    text: event.target.value,
+                    previous: state,
+                    next: null,
+                    dirty : true
+                }
+            });
+        }
+    }
+    reset () {
+        if (this.state.dirty) {
+            this.setState((state, props)=>{
+                let prev = state.previous;
+                return {
+                    text: prev.text,
+                    previous: prev.previous,
+                    next: null,
+                    dirty : false
+                }
+            });
+        }
     }
 
     goBack () {
         console.log("goBack");
+        if (this.state.dirty) {
+            alert("To go back, first you must commit current changes or else reset to the most recent commit.");
+            return;
+        }
         if (this.state.previous) {
             let prev = this.state.previous;
             this.setState((state, props)=> {
                 return {
                     text: prev.text,
                     previous: prev.previous,
-                    next: state
+                    next: state,
+                    dirty : false
                 };
             });
         }
@@ -47,26 +97,23 @@ class MyStatefulComponent extends Component {
                 return {
                     text: next.text,
                     previous: state,
-                    next: next.next
+                    next: next.next,
+                    dirty : false
                 };
             });
         }
     }
 
-    handleTextChange (event) {
-        event.persist();
-        this.setState((state, props)=>{
-            return {
-                text: event.target.value,
-                previous: state.previous,
-                next: null
-            }
-        });
-    }
+
 
     render() {
         return (
-            <div>
+            <div className = "my-stateful-component">
+                <p>
+                    Click commit to save a snapshot of the current text.
+                    Then you can use the back and forward buttons to browse 
+                    among these commits.
+                </p>
                 <p>
                     <textarea 
                         className = "myTextarea" 
@@ -79,16 +126,27 @@ class MyStatefulComponent extends Component {
                     <input 
                         type="button" 
                         value="commit" 
+                        disabled= { !this.state.dirty }
                         onClick = {this.commit}
+                    />
+                </p>
+                <p>
+                    <input 
+                        type="button" 
+                        value="reset to last commit" 
+                        disabled= { !this.state.dirty }
+                        onClick = {this.reset}
                     />
                     <input 
                         type="button" 
-                        value="back" 
+                        value="back"
+                        disabled= { (this.state.dirty || this.state.previous == null) }
                         onClick = {this.goBack}
                     />
                     <input 
                         type="button" 
                         value="forward" 
+                        disabled= { (this.state.next == null) }
                         onClick = {this.goForward}
                     />
                 </p>
