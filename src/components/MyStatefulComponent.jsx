@@ -15,6 +15,7 @@ class MyStatefulComponent extends Component {
         this.goBack = this.goBack.bind(this);
         this.goForward = this.goForward.bind(this);
         this.reset = this.reset.bind(this);
+        this.handleNewText = this.handleNewText.bind(this);
     }
 
     commit () {
@@ -34,12 +35,11 @@ class MyStatefulComponent extends Component {
         }
     }
 
-    handleTextChange (event) {
-        event.persist();
+    handleNewText (text) {
         if (this.state.dirty) {
             this.setState((state, props)=>{
                 return {
-                    text: event.target.value,
+                    text: text,
                     previous: state.previous,
                     next: null,
                     dirty : true
@@ -48,7 +48,7 @@ class MyStatefulComponent extends Component {
         } else {
             this.setState((state, props)=>{
                 return {
-                    text: event.target.value,
+                    text: text,
                     previous: state,
                     next: null,
                     dirty : true
@@ -56,6 +56,11 @@ class MyStatefulComponent extends Component {
             });
         }
     }
+
+    handleTextChange (event) {
+        this.handleNewText(event.target.value);
+    }
+
     reset () {
         if (this.state.dirty) {
             this.setState((state, props)=>{
@@ -75,17 +80,18 @@ class MyStatefulComponent extends Component {
         if (this.state.dirty) {
             alert("To go back, first you must commit current changes or else reset to the most recent commit.");
             return;
-        }
-        if (this.state.previous) {
-            let prev = this.state.previous;
-            this.setState((state, props)=> {
-                return {
-                    text: prev.text,
-                    previous: prev.previous,
-                    next: state,
-                    dirty : false
-                };
-            });
+        } else {
+            if (this.state.previous) {
+                let prev = this.state.previous;
+                this.setState((state, props)=> {
+                    return {
+                        text: prev.text,
+                        previous: prev.previous,
+                        next: state,
+                        dirty : false
+                    };
+                });
+            }
         }
     }
 
@@ -103,8 +109,6 @@ class MyStatefulComponent extends Component {
             });
         }
     }
-
-
 
     render() {
         return (
