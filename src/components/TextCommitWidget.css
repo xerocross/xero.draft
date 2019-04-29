@@ -1,10 +1,14 @@
-.my-stateful-component {
+.outer {
     text-align: center;
-    width: 550px;
+    width: 500px;
     margin-left: auto;
     margin-right: auto;
 }
-.myTextarea {
+textarea.my-textarea {
     width: 500px;
     height: 200px;
+    resize: vertical;
+}
+.instructions {
+    text-align: left;
 }

@@ -55,48 +55,62 @@ class TextCommitWidget extends Component {
 
     render() {
         return (
-            <div className = "my-stateful-component">
-                <p>
+            <div className = "outer">
+                <p className = "instructions">
                     Click commit to save a snapshot of the current text.
                     Then you can use the back and forward buttons to browse 
                     among these commits.
                 </p>
                 <p>
                     <textarea 
-                        className = "myTextarea" 
+                        className = {`form-control my-textarea`}
                         onChange = {this.handleTextChange}
                         value = {this.state.text}
                     >
                     </textarea>
                 </p>
-                <p>
-                    <input 
-                        type="button" 
-                        value="commit" 
-                        disabled= { !this.state.dirty }
-                        onClick = {this.commit}
-                    />
-                </p>
-                <p>
-                    <input 
-                        type="button" 
-                        value="reset to last commit" 
-                        disabled= { !this.state.dirty }
-                        onClick = {this.reset}
-                    />
-                    <input 
-                        type="button" 
-                        value="back"
-                        disabled= { (this.state.dirty || this.state.previous == null) }
-                        onClick = {this.goBack}
-                    />
-                    <input 
-                        type="button" 
-                        value="forward" 
-                        disabled= { (this.state.next == null) }
-                        onClick = {this.goForward}
-                    />
-                </p>
+                <div>
+                    <p className = "btn-group">
+                        <input 
+                            type="button" 
+                            value="back"
+                            className = "btn btn-primary"
+                            disabled= { (this.state.dirty || this.state.previous == null) }
+                            onClick = {this.goBack}
+                        />
+                        <input 
+                            type="button" 
+                            value="commit" 
+                            className = "btn btn-primary"
+                            disabled= { !this.state.dirty }
+                            onClick = {this.commit}
+                        />
+                        <input 
+                            type="button" 
+                            value="forward" 
+                            className = "btn btn-primary"
+                            disabled= { (this.state.next == null) }
+                            onClick = {this.goForward}
+                        />
+                    </p>
+                </div>
+                <div>
+                    <p className = "btn-group">
+                        <input 
+                            type="button" 
+                            value="reset to last commit"
+                            className = "btn btn-warning"
+                            disabled= { !this.state.dirty }
+                            onClick = {this.reset}
+                        />
+                        <input 
+                            type="button" 
+                            value="clear all"
+                            className = "btn btn-danger"
+                        />
+
+                    </p>
+                </div>
             </div>
         );
     }
