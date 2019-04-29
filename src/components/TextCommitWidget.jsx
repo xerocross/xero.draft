@@ -3,32 +3,22 @@ import { createStore } from 'redux'
 import "./TextCommitWidget.css";
 import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET, CLEAR_ALL } from "../redux-actions";
 import { draftApp } from "../reducers";
+import { persistStateToStorage } from "../bottle";
 
 class TextCommitWidget extends Component {
     constructor() {
         super();
         this.store = createStore(draftApp);
+
+
         this.store.subscribe(() => {
             
             let state = this.store.getState();
-            this.setState(()=> {
-                let existsNext = state.currentCommitIndex < state.commits.length - 1;
-                let existsPrevious = state.currentCommitIndex > 0;
-                return {
-                    text : state.currentText,
-                    dirty : state.dirty,
-                    existsNext : existsNext,
-                    existsPrevious : existsPrevious
-                }
-            })
+            persistStateToStorage(state);
+            this.setState(()=> {return this.updateFromState(state)});
         });
+        this.state = this.updateFromState(this.store.getState());
 
-        this.state = {
-            text : "",
-            existsNext : false,
-            existsPrevious: false,
-            dirty : false
-        }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.commit = this.commit.bind(this);
         this.goBack = this.goBack.bind(this);
@@ -36,6 +26,18 @@ class TextCommitWidget extends Component {
         this.reset = this.reset.bind(this);
         this.handleNewText = this.handleNewText.bind(this);
         this.clearAll = this.clearAll.bind(this);
+        this.updateFromState = this.updateFromState.bind(this);
+    }
+
+    updateFromState (state) {
+        let existsNext = state.currentCommitIndex < state.commits.length - 1;
+        let existsPrevious = state.currentCommitIndex > 0;
+        return {
+            text : state.currentText,
+            dirty : state.dirty,
+            existsNext : existsNext,
+            existsPrevious : existsPrevious
+        }
     }
 
     commit () {

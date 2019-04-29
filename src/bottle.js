@@ -1,10 +1,10 @@
 import { Commit } from "./Commit";
 
-export function bottle(state) {
+function bottle(state) {
     return JSON.stringify(state);
 }
 
-export function unBottle(stateString) {
+function unbottle(stateString) {
     try {
         let parsedObject = JSON.parse(stateString);
         let commitArray = [];
@@ -17,4 +17,18 @@ export function unBottle(stateString) {
     catch (e) {
         return null;
     }
+}
+
+export function getStateFromStorage () {
+    if (localStorage) {
+        let stateFromStorage = unbottle(localStorage.getItem("state"))
+        if (stateFromStorage !== null) {
+            return stateFromStorage
+        }
+    } 
+    return null;
+}
+
+export function persistStateToStorage (state) {
+    localStorage.setItem("state", bottle(state));
 }

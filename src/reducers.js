@@ -1,4 +1,5 @@
 import { Commit } from "./Commit";
+import { getStateFromStorage } from "./bottle";
 
 function clone (stateObject) {
     let newObj = Object.assign({}, stateObject);
@@ -20,10 +21,15 @@ const initState = {
 }
 
 export function draftApp (state, action) {
+    let newState;
     if (typeof state === "undefined") {
+        let stateFromStorage = getStateFromStorage();
+        if (stateFromStorage !== null) {
+            return Object.freeze(clone(stateFromStorage))
+        }
         return Object.freeze(clone(initState));
     }
-    let newState = clone(state);
+    newState = clone(state);
     // I'm pretty sure it's OK to mutate this object before
     // it actually becomes state.
     newState.commits = duplicateArray(newState.commits);
