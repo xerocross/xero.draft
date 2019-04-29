@@ -2,23 +2,31 @@ import React, { Component } from "react";
 import { createStore } from 'redux'
 import "./TextCommitWidget.css";
 import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET, CLEAR_ALL } from "../redux-actions";
-import { textCommitApp } from "../redux-reducers";
-
+import { draftApp } from "../reducers";
 
 class TextCommitWidget extends Component {
     constructor() {
         super();
-        this.store = createStore(textCommitApp);
+        this.store = createStore(draftApp);
         this.store.subscribe(() => {
+            
+            let state = this.store.getState();
             this.setState(()=> {
-                return this.store.getState()
+                let existsNext = state.currentCommitIndex < state.commits.length - 1;
+                let existsPrevious = state.currentCommitIndex > 0;
+                return {
+                    text : state.currentText,
+                    dirty : state.dirty,
+                    existsNext : existsNext,
+                    existsPrevious : existsPrevious
+                }
             })
         });
 
         this.state = {
             text : "",
-            previous : null,
-            next: null,
+            existsNext : false,
+            existsPrevious: false,
             dirty : false
         }
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -84,7 +92,7 @@ class TextCommitWidget extends Component {
                             type="button" 
                             value="back"
                             className = "btn btn-primary"
-                            disabled= { (this.state.dirty || this.state.previous == null) }
+                            disabled= { (this.state.dirty || this.state.existsPrevious == false) }
                             onClick = {this.goBack}
                         />
                         <input 
@@ -98,7 +106,7 @@ class TextCommitWidget extends Component {
                             type="button" 
                             value="forward" 
                             className = "btn btn-primary"
-                            disabled= { (this.state.next == null) }
+                            disabled= { (this.state.existsNext == false) }
                             onClick = {this.goForward}
                         />
                     </p>
