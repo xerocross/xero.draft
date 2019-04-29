@@ -72,6 +72,8 @@ export function textCommitApp (state, action) {
             } else {
                 return newState;
             }
+        case "CLEAR_ALL":
+            return clone(initialState);
         default:
             break;
     }

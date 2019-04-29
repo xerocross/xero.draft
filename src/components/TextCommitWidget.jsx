@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { createStore } from 'redux'
 import "./TextCommitWidget.css";
-import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET } from "../redux-actions";
+import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET, CLEAR_ALL } from "../redux-actions";
 import { textCommitApp } from "../redux-reducers";
 
 
@@ -27,6 +27,7 @@ class TextCommitWidget extends Component {
         this.goForward = this.goForward.bind(this);
         this.reset = this.reset.bind(this);
         this.handleNewText = this.handleNewText.bind(this);
+        this.clearAll = this.clearAll.bind(this);
     }
 
     commit () {
@@ -42,7 +43,9 @@ class TextCommitWidget extends Component {
     }
 
     reset () {
-        this.store.dispatch(RESET);
+        if (window.confirm("Lose any current edits and go back to last commit?  (This cannot be undone.)")) {
+            this.store.dispatch(RESET);
+        }
     }
 
     goBack () {
@@ -51,6 +54,12 @@ class TextCommitWidget extends Component {
 
     goForward () {
         this.store.dispatch(GO_FORWARD);
+    }
+
+    clearAll () {
+        if (window.confirm("Delete all contents and all commits?  (This cannot be undone.)")) {
+            this.store.dispatch(CLEAR_ALL);
+        }
     }
 
     render() {
@@ -106,9 +115,9 @@ class TextCommitWidget extends Component {
                         <input 
                             type="button" 
                             value="clear all"
+                            onClick = {this.clearAll}
                             className = "btn btn-danger"
                         />
-
                     </p>
                 </div>
             </div>

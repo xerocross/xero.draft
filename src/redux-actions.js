@@ -21,3 +21,7 @@ export const GO_FORWARD = {
 export const RESET = {
     type: "RESET"
 }
+
+export const CLEAR_ALL = {
+    type: "CLEAR_ALL"
+}
