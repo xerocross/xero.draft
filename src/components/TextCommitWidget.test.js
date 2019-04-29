@@ -10,6 +10,7 @@ let commitButton;
 let backButton;
 let resetButton;
 let forwardButton;
+let clearAllButton;
 
 
 beforeEach(()=>{
@@ -19,6 +20,10 @@ beforeEach(()=>{
     backButton = getByText("back");
     resetButton = getByText("reset to last commit");
     forwardButton = getByText("forward");
+    clearAllButton = getByText("clear all");
+    window.confirm = ()=> {
+        throw new Error("window.confirm not specified")
+    }
 })
 
 
@@ -28,13 +33,63 @@ test('renders without crashing', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
-test("commit text and reset to last commit functions as expected", ()=> {
+test("commit text and and confirmed reset", ()=> {
     fireEvent.change(textarea, { target: { value: 'adam' } });
     fireEvent.click(commitButton);
     fireEvent.change(textarea, { target: { value: 'adam cross' } });
     // textarea is dirty
+    window.confirm = () => true;
     fireEvent.click(resetButton);
     expect(textarea.value).toBe("adam");
+});
+
+test("clear all (confirmed) makes textarea empty", ()=> {
+    fireEvent.change(textarea, { target: { value: 'adam' } });
+    window.confirm = () => true;
+    fireEvent.click(clearAllButton);
+    expect(textarea.value).toBe("");
+});
+
+test("clear all (declined) leaves textarea unaltered", ()=> {
+    fireEvent.change(textarea, { target: { value: 'adam' } });
+    window.confirm = () => false;
+    fireEvent.click(clearAllButton);
+    expect(textarea.value).toBe("adam");
+});
+
+
+test("clear all (confirmed) deletes previous commit", ()=> {
+    fireEvent.change(textarea, { target: { value: 'adam' } });
+    fireEvent.click(commitButton);
+    fireEvent.change(textarea, { target: { value: 'adam cross' } });
+    window.confirm = () => true;
+    fireEvent.click(clearAllButton);
+    fireEvent.click(backButton);
+    expect(textarea.value).toBe("");  
+    // if it didn't work, we would expect to see "adam"
+});
+
+test("clear all (confirmed) deletes forward commit", ()=> {
+    fireEvent.change(textarea, { target: { value: 'adam' } });
+    fireEvent.click(commitButton);
+    fireEvent.change(textarea, { target: { value: 'adam cross' } });
+    fireEvent.click(commitButton);
+    fireEvent.click(backButton);
+    window.confirm = () => true;
+    fireEvent.click(clearAllButton);
+    fireEvent.click(forwardButton);
+    expect(textarea.value).toBe("");  
+});
+
+
+test("commit text and and declined reset", ()=> {
+    fireEvent.change(textarea, { target: { value: 'adam' } });
+    fireEvent.click(commitButton);
+    fireEvent.change(textarea, { target: { value: 'adam cross' } });
+    // textarea is dirty
+    window.confirm = () => false;
+    fireEvent.click(resetButton);
+    expect(textarea.value).toBe("adam cross");
 });
 
 test("two commits, one back", () => {
