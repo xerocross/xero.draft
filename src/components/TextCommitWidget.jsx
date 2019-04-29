@@ -9,8 +9,6 @@ class TextCommitWidget extends Component {
     constructor() {
         super();
         this.store = createStore(textCommitApp);
-        // this.store.subscribe(() => console.log(this.store.getState()))
-
         this.store.subscribe(() => {
             this.setState(()=> {
                 return this.store.getState()
@@ -33,41 +31,10 @@ class TextCommitWidget extends Component {
 
     commit () {
         this.store.dispatch(COMMIT);
-        // if (this.state.dirty === false) {
-        //     return;
-        // } else {
-        //     this.setState((state, props)=>{
-        //         return {
-        //             text: state.text,
-        //             previous: state.previous,
-        //             next: null,
-        //             dirty : false
-        //         }
-        //     });
-        // }
     }
 
     handleNewText (text) {
         this.store.dispatch(getNewTextAction(text));
-        // if (this.state.dirty) {
-        //     this.setState((state, props)=>{
-        //         return {
-        //             text: text,
-        //             previous: state.previous,
-        //             next: null,
-        //             dirty : true
-        //         }
-        //     });
-        // } else {
-        //     this.setState((state, props)=>{
-        //         return {
-        //             text: text,
-        //             previous: state,
-        //             next: null,
-        //             dirty : true
-        //         }
-        //     });
-        // }
     }
 
     handleTextChange (event) {
@@ -76,52 +43,14 @@ class TextCommitWidget extends Component {
 
     reset () {
         this.store.dispatch(RESET);
-            // if (this.state.dirty) {
-            //     this.setState((state, props)=>{
-            //         let prev = state.previous;
-            //         return {
-            //             text: prev.text,
-            //             previous: prev.previous,
-            //             next: null,
-            //             dirty : false
-            //         }
-            //     });
-            // }
     }
 
     goBack () {
         this.store.dispatch(GO_BACK);
-        // if (this.state.dirty) {
-        //     alert("To go back, first you must commit current changes or else reset to the most recent commit.");
-        //     return;
-        // } else {
-        //     if (this.state.previous) {
-        //         let prev = this.state.previous;
-        //         this.setState((state, props)=> {
-        //             return {
-        //                 text: prev.text,
-        //                 previous: prev.previous,
-        //                 next: state,
-        //                 dirty : false
-        //             };
-        //         });
-        //     }
-        // }
     }
 
     goForward () {
         this.store.dispatch(GO_FORWARD);
-        // if (this.state.next) {
-        //     let next = this.state.next;
-        //     this.setState((state, props)=> {
-        //         return {
-        //             text: next.text,
-        //             previous: state,
-        //             next: next.next,
-        //             dirty : false
-        //         };
-        //     });
-        // }
     }
 
     render() {
