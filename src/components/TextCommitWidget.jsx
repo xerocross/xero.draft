@@ -4,17 +4,20 @@ import "./TextCommitWidget.css";
 import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET, CLEAR_ALL } from "../redux-actions";
 import { draftApp } from "../reducers";
 import { persistStateToStorage } from "../bottle";
+import debounce from "lodash.debounce";
 
 class TextCommitWidget extends Component {
     constructor() {
         super();
         this.store = createStore(draftApp);
-
+        this.updateStorage = debounce((state) => {
+            console.log("updating storage");
+            persistStateToStorage(state);
+        }, 200);
 
         this.store.subscribe(() => {
-            
             let state = this.store.getState();
-            persistStateToStorage(state);
+            this.updateStorage(state);
             this.setState(()=> {return this.updateFromState(state)});
         });
         this.state = this.updateFromState(this.store.getState());
@@ -28,6 +31,7 @@ class TextCommitWidget extends Component {
         this.clearAll = this.clearAll.bind(this);
         this.updateFromState = this.updateFromState.bind(this);
     }
+
 
     updateFromState (state) {
         let existsNext = state.currentCommitIndex < state.commits.length - 1;
