@@ -11,7 +11,6 @@ class TextCommitWidget extends Component {
         super();
         this.store = createStore(draftApp);
         this.updateStorage = debounce((state) => {
-            console.log("updating storage");
             persistStateToStorage(state);
         }, 200);
 
