@@ -5,6 +5,7 @@ import { getNewTextAction, COMMIT, GO_BACK, GO_FORWARD, RESET, CLEAR_ALL } from 
 import { draftApp } from "../reducers";
 import { persistStateToStorage } from "../bottle";
 import debounce from "lodash.debounce";
+import Mousetrap from "mousetrap";
 
 class TextCommitWidget extends Component {
     constructor() {
@@ -29,6 +30,11 @@ class TextCommitWidget extends Component {
         this.handleNewText = this.handleNewText.bind(this);
         this.clearAll = this.clearAll.bind(this);
         this.updateFromState = this.updateFromState.bind(this);
+
+        Mousetrap.bind('mod+p', (e) => { 
+            e.preventDefault();
+            this.commit();
+        });
     }
 
 
@@ -85,7 +91,7 @@ class TextCommitWidget extends Component {
                 </p>
                 <p>
                     <textarea 
-                        className = {`form-control my-textarea`}
+                        className = {`form-control my-textarea mousetrap`}
                         onChange = {this.handleTextChange}
                         value = {this.state.text}
                     >
