@@ -87,7 +87,8 @@ class TextCommitWidget extends Component {
                 <p className = "instructions">
                     Click commit to save a snapshot of the current text.
                     Then you can use the back and forward buttons to browse 
-                    among these commits.
+                    among these commits.  You may also use the keyboard 
+                    shortcut ctrl+p to commit.
                 </p>
                 <p>
                     <textarea 

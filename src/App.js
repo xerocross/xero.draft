@@ -4,8 +4,7 @@ import TextCommitWidget from "./components/TextCommitWidget";
 
 function App() {
   return (
-    <div className="App container">
-      <h1>Xero Draft</h1>
+    <div>
       <TextCommitWidget />
     </div>
   );
