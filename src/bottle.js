@@ -1,5 +1,7 @@
 import { Commit } from "./Commit";
 
+const NAMESPACE = "draft_editor_state";
+
 function bottle(state) {
     return JSON.stringify(state);
 }
@@ -21,7 +23,7 @@ function unbottle(stateString) {
 
 export function getStateFromStorage () {
     if (localStorage) {
-        let stateFromStorage = unbottle(localStorage.getItem("state"))
+        let stateFromStorage = unbottle(localStorage.getItem(NAMESPACE))
         if (stateFromStorage !== null) {
             return stateFromStorage
         }
@@ -30,5 +32,5 @@ export function getStateFromStorage () {
 }
 
 export function persistStateToStorage (state) {
-    localStorage.setItem("state", bottle(state));
+    localStorage.setItem(NAMESPACE, bottle(state));
 }
